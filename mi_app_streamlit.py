@@ -292,6 +292,7 @@ if archivo is not None:
 
         # ---- *** Mostrar el DataFrame con Streamlit *** -----
         st.dataframe(df.head(filas),column_config=config, use_container_width=True, height=300)
+        
         st.success(f"✅ Archivo procesado correctamente en {end - start:.4f} segundos.")
 
     except Exception as e:
@@ -399,6 +400,29 @@ if 'df' in locals():
     )
     # Filtrar el DataFrame según selección de Branch
     df_cliente = df_cliente[df_cliente['Branch'].isin(selected_branches)]
+
+    # ----- *** KPIs resumen en 4 columnas *** -----
+    st.markdown("## 📈 Métricas Clave (KPIs)")
+
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
+    with kpi1:
+        total_ingresos = df_cliente['Total'].sum()
+        st.metric(label="Ingresos Totales", value=f"${total_ingresos:,.2f}")
+
+    with kpi2:
+        ingreso_bruto = df_cliente['gross income'].sum()
+        st.metric(label="Ingreso Bruto Total", value=f"${ingreso_bruto:,.2f}")
+
+    with kpi3:
+        rating_promedio = df_cliente['Rating'].mean()
+        st.markdown("**Calificación Promedio**")
+        st.markdown(f"<h2 style='margin-top:-10px;'>{rating_promedio:.2f} ⭐</h2>", unsafe_allow_html=True)
+
+    with kpi4:
+        num_transacciones = len(df_cliente)
+        st.metric(label="Número de Transacciones", value=f"{num_transacciones:,}")
+
 
 
 # ------------------------------------------------------ Fin de estado de variables 
